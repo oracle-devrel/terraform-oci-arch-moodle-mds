@@ -44,11 +44,6 @@ variable "vcn_cidr" {
   default     = "10.0.0.0/16"
 }
 
-variable "dns_label" {
-  description = "Allows assignment of DNS hostname when launching an Instance. "
-  default     = ""
-}
-
 variable "instance_os" {
   description = "Operating system for compute instances"
   default     = "Oracle Linux"
