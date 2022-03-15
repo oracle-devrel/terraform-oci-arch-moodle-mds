@@ -76,7 +76,7 @@ variable "node_flex_shape_memory" {
 
 variable "label_prefix" {
   description = "To create unique identifier for multiple setup in a compartment."
-  default     = "moodle"
+  default     = "Moodle"
 }
 
 variable "admin_password" {
