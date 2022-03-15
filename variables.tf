@@ -174,11 +174,6 @@ variable "moodle_schema" {
   default     = "moodle"
 }
 
-variable "mds_instance_name" {
-  description = "Name of the MDS instance"
-  default     = "MoodleMDS"
-}
-
 variable "numberOfNodes" {
     description = "Amount of Webservers to deploy"
     default = 2

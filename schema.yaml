@@ -35,7 +35,6 @@ variableGroups:
       - moodle_password 
       - moodle_admin_password 
       - numberOfNodes
-      - moodle_password
       - show_advanced
 
   - title: Network Optional Configuration
@@ -103,7 +102,6 @@ variableGroups:
     variables:
       - admin_username
       - mysql_shape      
-      - mds_instance_name
       - mysql_db_system_data_storage_size_in_gb
       - mysql_is_highly_available
 
@@ -432,11 +430,6 @@ variables:
     title: "Deploy High Availability for MDS"
     type: boolean
     default: false
-
-  mds_instance_name:
-    type: string
-    required: true
-    title: MDS Instance's name
 
   moodle_name:
     type: string
