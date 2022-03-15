@@ -30,6 +30,9 @@ variable "release" {
   default     = "1.0"
 }
 
+variable "ssh_public_key" {
+  default = ""
+}
 
 variable "vcn" {
   description = "VCN Name"
@@ -73,9 +76,8 @@ variable "node_flex_shape_memory" {
 
 variable "label_prefix" {
   description = "To create unique identifier for multiple setup in a compartment."
-  default     = ""
+  default     = "Moodle"
 }
-
 
 variable "admin_password" {
   description = "Password for the admin user for MySQL Database Service"
@@ -177,8 +179,40 @@ variable "mds_instance_name" {
   default     = "MoodleMDS"
 }
 
-variable "moodle_instance_name" {
-  description = "Name of the Moodle compute instance"
-  default     = "MoodleServer"
+variable "numberOfNodes" {
+    description = "Amount of Webservers to deploy"
+    default = 2
 }
 
+variable "use_shared_storage" {
+  description = "Decide if you want to use shared NFS on OCI FSS"
+  default     = true
+}
+
+variable "use_bastion_service" {
+  default = false
+}
+
+variable "bastion_shape" {
+  default = "VM.Standard.E3.Flex"
+}
+
+variable "bastion_flex_shape_ocpus" {
+  default = 1
+}
+
+variable "bastion_flex_shape_memory" {
+  default = 1
+}
+
+variable "lb_shape" {
+  default = "flexible"
+}
+
+variable "flex_lb_min_shape" {
+  default = "10"
+}
+
+variable "flex_lb_max_shape" {
+  default = "100"
+}

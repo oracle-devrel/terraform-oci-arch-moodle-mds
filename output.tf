@@ -2,7 +2,7 @@
 ## All rights reserved. The Universal Permissive License (UPL), Version 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 output "moodle_home_URL" {
-  value = "http://${module.moodle.public_ip}/"
+  value = "http://${module.moodle.public_ip[0]}/"
 }
 
 output "moodle_db_user" {
@@ -23,6 +23,6 @@ output "mds_instance_ip" {
 }
 
 output "ssh_private_key" {
-  value = local.private_key_to_show
+  value = module.moodle.generated_ssh_private_key
   sensitive = true
 }

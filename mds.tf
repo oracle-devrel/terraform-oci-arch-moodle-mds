@@ -7,7 +7,7 @@ module "mds-instance" {
     region                                          = var.region
     mysql_instance_compartment_ocid                 = var.compartment_ocid
     mysql_network_compartment_ocid                  = var.compartment_ocid
-    subnet_id                                       = oci_core_subnet.mds_private_subnet.id
+    subnet_id                                       = oci_core_subnet.mds_subnet_private.id
     mysql_db_system_admin_username                  = var.admin_username
     mysql_db_system_admin_password                  = var.admin_password
     mysql_db_system_availability_domain             = var.availability_domain_name == "" ? data.oci_identity_availability_domains.ADs.availability_domains[var.availability_domain_number]["name"] : var.availability_domain_name
