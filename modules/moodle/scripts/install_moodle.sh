@@ -16,10 +16,13 @@ sed -i '/max_input_time = 60/c\max_input_time = 120' /etc/php.ini
 sed -i '/post_max_size = 8M/c\post_max_size = 50M' /etc/php.ini
 sed -i '/max_input_vars = 1000/c\max_input_vars = 5000' /etc/php.ini
 
-
-
 systemctl start httpd
 systemctl enable httpd
 
+cp /home/opc/config.php /var/www/html/ 
+chown apache:apache /var/www/html/config.php
+chown -R apache:apache /var/www/moodledata
+/usr/bin/php /var/www/html/admin/cli/install_database.php --adminuser=${moodle_admin_user} --adminpass=${moodle_admin_password} --adminemail=${moodle_admin_email} --fullname=${moodle_site_fullname} --shortname=${moodle_site_shortname} --agree-license
+chcon -Rv -t httpd_sys_rw_content_t /var/www/moodledata/
 
 echo "Moodle installed and Apache started !"

@@ -2,16 +2,15 @@
 # Init Script Files
 
 locals {
-  php_script      = "~/install_php74.sh"
+  php_script          = "~/install_php74.sh"
   moodle_script       = "~/install_moodle.sh"
-  security_script = "~/configure_local_security.sh"
+  security_script     = "~/configure_local_security.sh"
   create_moodle_db    = "~/create_moodle_db.sh"
-  fault_domains_per_ad = 3
+  config_php          = "~/config.php"
 }
 
 data "template_file" "install_php" {
   template = file("${path.module}/scripts/install_php74.sh")
-
   vars = {
     mysql_version         = var.mysql_version,
     user                  = var.vm_user
@@ -20,15 +19,31 @@ data "template_file" "install_php" {
 
 data "template_file" "install_moodle" {
   template = file("${path.module}/scripts/install_moodle.sh")
+  vars = {
+    moodle_admin_user       = var.moodle_admin_user
+    moodle_admin_password   = var.moodle_admin_password
+    moodle_admin_email      = var.moodle_admin_email
+    moodle_site_fullname    = var.moodle_site_fullname
+    moodle_site_shortname   = var.moodle_site_shortname
+  }
 }
 
 data "template_file" "configure_local_security" {
   template = file("${path.module}/scripts/configure_local_security.sh")
 }
 
+data "template_file" "config_php" {
+  template = file("${path.module}/scripts/config.php")
+  vars = {
+    moodle_public_ip = oci_core_instance.Moodle.public_ip
+    mds_ip           = var.mds_ip
+    moodle_schema    = var.moodle_schema
+    moodle_password  = var.moodle_password
+  }
+}
+
 data "template_file" "create_moodle_db" {
   template = file("${path.module}/scripts/create_moodle_db.sh")
-  count    = var.nb_of_webserver
   vars = {
     admin_password  = var.admin_password
     admin_username  = var.admin_username
@@ -36,16 +51,13 @@ data "template_file" "create_moodle_db" {
     mds_ip          = var.mds_ip
     moodle_name     = var.moodle_name
     moodle_schema   = var.moodle_schema
-    dedicated       = var.dedicated
-    instancenb      = count.index+1
   }
 }
 
 
 resource "oci_core_instance" "Moodle" {
-  count               = var.nb_of_webserver
   compartment_id      = var.compartment_ocid
-  display_name        = "${var.label_prefix}${var.display_name}${count.index+1}"
+  display_name        = "${var.label_prefix}${var.display_name}"
   shape               = var.shape
   availability_domain = var.availability_domain
   defined_tags        = var.defined_tags
@@ -60,9 +72,9 @@ resource "oci_core_instance" "Moodle" {
 
   create_vnic_details {
     subnet_id        = var.subnet_id
-    display_name     = "${var.label_prefix}${var.display_name}${count.index+1}"
+    display_name     = "${var.label_prefix}${var.display_name}"
     assign_public_ip = var.assign_public_ip
-    hostname_label   = "${var.display_name}${count.index+1}"
+    hostname_label   = "${var.display_name}"
   }
 
   metadata = {
@@ -74,13 +86,17 @@ resource "oci_core_instance" "Moodle" {
     source_type = "image"
   }
 
+}
+
+resource "null_resource" "moodle_provisioner" {
+
   provisioner "file" {
     content     = data.template_file.install_php.rendered
     destination = local.php_script
 
     connection  {
       type        = "ssh"
-      host        = self.public_ip
+      host        = oci_core_instance.Moodle.public_ip
       agent       = false
       timeout     = "5m"
       user        = var.vm_user
@@ -95,7 +111,7 @@ resource "oci_core_instance" "Moodle" {
 
     connection  {
       type        = "ssh"
-      host        = self.public_ip
+      host        = oci_core_instance.Moodle.public_ip
       agent       = false
       timeout     = "5m"
       user        = var.vm_user
@@ -110,7 +126,7 @@ resource "oci_core_instance" "Moodle" {
 
     connection  {
       type        = "ssh"
-      host        = self.public_ip
+      host        = oci_core_instance.Moodle.public_ip
       agent       = false
       timeout     = "5m"
       user        = var.vm_user
@@ -120,12 +136,27 @@ resource "oci_core_instance" "Moodle" {
   }
 
  provisioner "file" {
-    content     = data.template_file.create_moodle_db[count.index].rendered
+    content     = data.template_file.create_moodle_db.rendered
     destination = local.create_moodle_db
 
     connection  {
       type        = "ssh"
-      host        = self.public_ip
+      host        = oci_core_instance.Moodle.public_ip
+      agent       = false
+      timeout     = "5m"
+      user        = var.vm_user
+      private_key = var.ssh_private_key
+
+    }
+  }
+
+ provisioner "file" {
+    content     = data.template_file.config_php.rendered
+    destination = local.config_php
+
+    connection  {
+      type        = "ssh"
+      host        = oci_core_instance.Moodle.public_ip
       agent       = false
       timeout     = "5m"
       user        = var.vm_user
@@ -138,7 +169,7 @@ resource "oci_core_instance" "Moodle" {
    provisioner "remote-exec" {
     connection  {
       type        = "ssh"
-      host        = self.public_ip
+      host        = oci_core_instance.Moodle.public_ip
       agent       = false
       timeout     = "5m"
       user        = var.vm_user
@@ -149,18 +180,13 @@ resource "oci_core_instance" "Moodle" {
     inline = [
        "chmod +x ${local.php_script}",
        "sudo ${local.php_script}",
-       "chmod +x ${local.moodle_script}",
-       "sudo ${local.moodle_script}",
        "chmod +x ${local.security_script}",
        "sudo ${local.security_script}",
        "chmod +x ${local.create_moodle_db}",
-       "sudo ${local.create_moodle_db}"
+       "sudo ${local.create_moodle_db}",
+       "chmod +x ${local.moodle_script}",
+       "sudo ${local.moodle_script}"
     ]
 
    }
-
-  timeouts {
-    create = "10m"
-
-  }
 }

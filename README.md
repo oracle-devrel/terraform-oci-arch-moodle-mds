@@ -18,7 +18,6 @@ If you don't have the required permissions and quota, contact your tenancy admin
 
 1. Click [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?region=home&zipUrl=https://github.com/oracle-devrel/terraform-oci-arch-moodle-mds/releases/latest/download/terraform-oci-arch-moodle-mds-stack-latest.zip)
 
-
     If you aren't already signed in, when prompted, enter the tenancy and user credentials.
 
 2. Review and accept the terms and conditions.
@@ -65,6 +64,7 @@ compartment_ocid    = "<compartment_ocid>"
 # MySQL and moodle variables
 admin_password         = "<admin_password>"
 moodle_password        = "<moodle_password>"
+moodle_admin_password  = "<moodle_admin_password>"
 ````
 
 ### Create the Resources
@@ -92,7 +92,8 @@ module "oci-arch-moodle-mds" {
   region                        = "<oci_region>"
   compartment_ocid              = "<compartment_ocid>"
   admin_password                = "<admin_password>"
-  moodle_password              = "<moodle_password>"
+  moodle_password               = "<moodle_password>"
+  moodle_admin_password         = "<moodle_admin_password>"
 }
 ```
 

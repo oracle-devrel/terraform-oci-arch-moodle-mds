@@ -17,8 +17,12 @@ module "moodle" {
   moodle_schema         = var.moodle_schema
   moodle_name           = var.moodle_name
   moodle_password       = var.moodle_password
+  moodle_admin_user     = var.moodle_admin_user
+  moodle_admin_password = var.moodle_admin_password
+  moodle_admin_email    = var.moodle_admin_email
+  moodle_site_fullname  = var.moodle_site_fullname
+  moodle_site_shortname = var.moodle_site_shortname
   display_name          = var.moodle_instance_name
-  nb_of_webserver       = 1
   flex_shape_ocpus      = var.node_flex_shape_ocpus
   flex_shape_memory     = var.node_flex_shape_memory
   defined_tags          = { "${oci_identity_tag_namespace.ArchitectureCenterTagNamespace.name}.${oci_identity_tag.ArchitectureCenterTag.name}" = var.release }

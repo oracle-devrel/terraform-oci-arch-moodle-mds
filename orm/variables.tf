@@ -86,6 +86,30 @@ variable "admin_username" {
   default = "admin"
 }
 
+variable "moodle_admin_user" {
+    description = "Moodle Admin User"
+    default = "admin"    
+}
+
+variable "moodle_admin_password" {
+    description = "Moodle Admin Password"
+}
+
+variable "moodle_admin_email" {
+    description = "Moodle Admin Email"
+    default = "user.name@example.com"
+}
+
+variable "moodle_site_fullname" {
+    description = "Moodle Site Fullname"
+    default = "Moodle-Deployed-in-OCI"
+}
+
+variable "moodle_site_shortname" {
+    description = "Moodle Site Shortname"
+    default = "MoodleAtOCI"
+}
+
 variable "ssh_authorized_keys_path" {
   description = "Public SSH keys path to be included in the ~/.ssh/authorized_keys file for the default user on the instance. DO NOT FILL WHEN USING REOSURCE MANAGER STACK!"
   default     = ""
@@ -110,8 +134,8 @@ variable "mysql_db_system_data_storage_size_in_gb" {
 }
 
 variable "mysql_db_system_description" {
-  description = "MySQL DB System for moodle-MDS"
-  default = "MySQL DB System for moodle-MDS"
+  description = "MySQL DB System for Moodle-MDS"
+  default = "MySQL DB System for Moodle-MDS"
 }
 
 variable "mysql_db_system_display_name" {

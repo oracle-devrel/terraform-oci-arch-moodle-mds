@@ -24,7 +24,7 @@ variable "subnet_id" {
 
 variable "shape" {
   description = "Instance shape to use for master instance. "
-  default     = "VM.Standard2.1"
+  default     = "VM.Standard.E4.Flex"
 }
 
 variable "flex_shape_ocpus" {
@@ -88,19 +88,32 @@ variable "admin_password" {
     description = "Password for the admin user for MDS"
 }
 
+variable "moodle_admin_user" {
+    description = "Moodle Admin User"
+    default = "admin"    
+}
+
+variable "moodle_admin_password" {
+    description = "Moodle Admin Password"
+}
+
+variable "moodle_admin_email" {
+    description = "Moodle Admin Email"
+    default = "user.name@example.com"
+}
+
+variable "moodle_site_fullname" {
+    description = "Moodle Site Fullname"
+    default = "Moodle-Deployed-in-OCI"
+}
+
+variable "moodle_site_shortname" {
+    description = "Moodle Site Shortname"
+    default = "MoodleAtOCI"
+}
+
 variable "mds_ip" {
     description = "Private IP of the MDS Instance"
-}
-
-variable "nb_of_webserver" {
-    description = "Amount of Webservers to deploy"
-    default = 1
-}
-
-variable "use_AD" {
-  description = "Using different Availability Domain, by default use of Fault Domain"
-  type        = bool
-  default     = false
 }
 
 variable "dedicated" {
