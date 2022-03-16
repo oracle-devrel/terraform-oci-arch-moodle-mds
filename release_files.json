@@ -26,10 +26,7 @@
         {
           "src": "orm/provider.tf",
           "dst": "provider.tf"
-        },
-        {
-            "src_pattern": "modules/*"
-        } 
+        }
       ]
     },
     {
